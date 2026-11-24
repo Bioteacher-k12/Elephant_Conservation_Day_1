@@ -149,51 +149,60 @@
   <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-8 no-print">
 
     <!-- =================================================================== -->
-    <!-- PART 2: SELECT 3 CONSERVATION PROGRAMS & INVESTIGATE FIELD BRIEFS   -->
+    <!-- ACTIVITY OVERVIEW & ROADMAP                                         -->
     <!-- =================================================================== -->
-    <section class="bg-white rounded-2xl border border-stone-200 p-5 sm:p-7 shadow-xs space-y-6">
-      <div class="border-b border-stone-200 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <span class="text-xs font-bold uppercase tracking-wider text-warmamber-700">Part 1 &bull; Choice-of-Three Solo Investigation</span>
-          <h2 class="text-xl sm:text-2xl font-extrabold text-forest-900 mt-1">Select Any 3 Conservation Programs to Investigate</h2>
-          <p class="text-xs sm:text-sm text-stone-600 mt-0.5">
-            Choose <strong>3 of the 6 programs</strong> below (try mixing different conservation levels such as National Parks, NGOs, and Global plans). Selecting a program opens its Field Brief and Investigation Matrix below. Click on them to select them. 
+    <section class="bg-white rounded-2xl border border-stone-200 p-6 sm:p-8 shadow-xs space-y-5">
+      <div class="flex items-start gap-4">
+        <div class="w-10 h-10 rounded-xl bg-forest-50 border border-forest-700/20 flex items-center justify-center shrink-0 mt-0.5">
+          <svg class="w-5 h-5 text-forest-800" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+          </svg>
+        </div>
+        <div class="space-y-1.5">
+          <span class="block text-xs font-bold uppercase tracking-wider text-warmamber-700">Investigation Overview</span>
+          <h2 class="text-lg sm:text-xl font-extrabold text-forest-900">How This Investigation Works</h2>
+          <p class="text-xs sm:text-sm text-stone-700 leading-relaxed pt-0.5">
+            In this investigation, you will evaluate how real-world wildlife conservation programs protect African and Asian elephants across different scales of action. Complete the three parts below in order:
+          </p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-1">
+        <div class="rounded-xl bg-stonebg border border-stone-200 p-4 space-y-1.5">
+          <span class="inline-block text-[11px] font-extrabold uppercase tracking-wider text-warmamber-700">Part 1 &bull; Framework</span>
+          <h3 class="text-sm font-extrabold text-forest-900">Levels &amp; Criteria</h3>
+          <p class="text-xs text-stone-600 leading-relaxed">
+            Review the four levels of conservation (Individual, Community, National, and Global) alongside eight scientific evaluation criteria, then complete a quick check.
           </p>
         </div>
 
-        <div class="shrink-0 rounded-xl bg-forest-50 border border-forest-700/25 px-4 py-2.5 text-center">
-          <div class="text-[11px] font-bold uppercase text-forest-700">Programs Selected</div>
-          <div id="selected-count-pill" class="text-lg font-extrabold text-forest-900">0 / 3</div>
+        <div class="rounded-xl bg-stonebg border border-stone-200 p-4 space-y-1.5">
+          <span class="inline-block text-[11px] font-extrabold uppercase tracking-wider text-warmamber-700">Part 2 &bull; Investigation</span>
+          <h3 class="text-sm font-extrabold text-forest-900">Select &amp; Score 3 Programs</h3>
+          <p class="text-xs text-stone-600 leading-relaxed">
+            Choose any three of six real-world elephant conservation programs to examine using their Field Brief dossiers, scoring each against the eight criteria and biodiversity values.
+          </p>
         </div>
-      </div>
 
-      <!-- Inline Selection Notice (Replaces alert()) -->
-      <div id="selection-notice" class="hidden rounded-xl bg-warmamber-50 border border-warmamber-500/40 px-4 py-2.5 text-xs sm:text-sm font-bold text-warmamber-700">
-        You have already selected 3 programs. Deselect one of your active programs first if you want to swap in a different one.
-      </div>
-
-      <!-- 6-Program Selection Grid -->
-      <div id="program-selector-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <!-- Populated dynamically via JS -->
-      </div>
-
-      <!-- Active Program Investigation Dossiers -->
-      <div id="dossiers-container" class="space-y-6 pt-2">
-        <div class="rounded-2xl bg-stonebg border border-dashed border-stone-300 p-8 text-center text-xs sm:text-sm text-stone-600">
-          Select up to <strong>3 programs</strong> from the cards above to open their Field Brief Dossiers, 8-Criteria Scorecards, and Matrix Notes.
+        <div class="rounded-xl bg-stonebg border border-stone-200 p-4 space-y-1.5">
+          <span class="inline-block text-[11px] font-extrabold uppercase tracking-wider text-warmamber-700">Part 3 &bull; Synthesis</span>
+          <h3 class="text-sm font-extrabold text-forest-900">Compare &amp; Summarize</h3>
+          <p class="text-xs text-stone-600 leading-relaxed">
+            Compare your three chosen programs side-by-side in a live summary matrix and answer two synthesis checkpoint questions before saving or printing your report.
+          </p>
         </div>
       </div>
     </section>
 
     <!-- =================================================================== -->
-    <!-- PART 3: LIVE MATRIX SUMMARY & DAY 3 CHECKPOINT                      -->
+    <!-- PART 1: EXPLANATIONS OF LEVELS 1-4 & EVALUATION CRITERIA            -->
     <!-- =================================================================== -->
     <section class="bg-white rounded-2xl border border-stone-200 p-5 sm:p-7 shadow-xs space-y-6">
       <div class="border-b border-stone-200 pb-4">
-        <span class="text-xs font-bold uppercase tracking-wider text-warmamber-700">Part 2 &bull; Cross-Program Synthesis</span>
-        <h2 class="text-xl sm:text-2xl font-extrabold text-forest-900 mt-1">Your 3-Program Investigation Matrix &amp; Checkpoint</h2>
+        <span class="text-xs font-bold uppercase tracking-wider text-warmamber-700">Part 1 &bull; Conservation Framework</span>
+        <h2 class="text-xl sm:text-2xl font-extrabold text-forest-900 mt-1">Four Levels of Wildlife Conservation &amp; Evaluation Criteria</h2>
         <p class="text-xs sm:text-sm text-stone-600 mt-0.5">
-          Review how your 3 selected programs compare across conservation levels, 8-criteria scores, and biodiversity values.
+          Review the four levels of conservation action and the eight scientific criteria you will use to evaluate your chosen programs.
         </p>
       </div>
 
@@ -325,27 +334,27 @@
     </section>
 
     <!-- =================================================================== -->
-    <!-- PART 2: SELECT 4 CONSERVATION PROGRAMS & INVESTIGATE FIELD BRIEFS   -->
+    <!-- PART 2: SELECT 3 CONSERVATION PROGRAMS & INVESTIGATE FIELD BRIEFS   -->
     <!-- =================================================================== -->
     <section class="bg-white rounded-2xl border border-stone-200 p-5 sm:p-7 shadow-xs space-y-6">
       <div class="border-b border-stone-200 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <span class="text-xs font-bold uppercase tracking-wider text-warmamber-700">Part 3 &bull; Choice-of-Four Solo Investigation</span>
-          <h2 class="text-xl sm:text-2xl font-extrabold text-forest-900 mt-1">Select Any 4 Conservation Programs to Investigate</h2>
+          <span class="text-xs font-bold uppercase tracking-wider text-warmamber-700">Part 2 &bull; Choice-of-Three Solo Investigation</span>
+          <h2 class="text-xl sm:text-2xl font-extrabold text-forest-900 mt-1">Select Any 3 Conservation Programs to Investigate</h2>
           <p class="text-xs sm:text-sm text-stone-600 mt-0.5">
-            Choose <strong>4 of the 6 programs</strong> below (try mixing different conservation levels such as National Parks, NGOs, and Global plans). Selecting a program opens its Field Brief and Investigation Matrix below.
+            Choose <strong>3 of the 6 programs</strong> below (try mixing different conservation levels such as National Parks, NGOs, and Global plans). Selecting a program opens its Field Brief and Investigation Matrix below. Click on them to select them.
           </p>
         </div>
 
         <div class="shrink-0 rounded-xl bg-forest-50 border border-forest-700/25 px-4 py-2.5 text-center">
           <div class="text-[11px] font-bold uppercase text-forest-700">Programs Selected</div>
-          <div id="selected-count-pill" class="text-lg font-extrabold text-forest-900">0 / 4</div>
+          <div id="selected-count-pill" class="text-lg font-extrabold text-forest-900">0 / 3</div>
         </div>
       </div>
 
       <!-- Inline Selection Notice (Replaces alert()) -->
       <div id="selection-notice" class="hidden rounded-xl bg-warmamber-50 border border-warmamber-500/40 px-4 py-2.5 text-xs sm:text-sm font-bold text-warmamber-700">
-        You have already selected 4 programs. Deselect one of your active programs first if you want to swap in a different one.
+        You have already selected 3 programs. Deselect one of your active programs first if you want to swap in a different one.
       </div>
 
       <!-- 6-Program Selection Grid -->
@@ -356,20 +365,20 @@
       <!-- Active Program Investigation Dossiers -->
       <div id="dossiers-container" class="space-y-6 pt-2">
         <div class="rounded-2xl bg-stonebg border border-dashed border-stone-300 p-8 text-center text-xs sm:text-sm text-stone-600">
-          Select up to <strong>4 programs</strong> from the cards above to open their Field Brief Dossiers, 8-Criteria Scorecards, and Matrix Notes.
+          Select up to <strong>3 programs</strong> from the cards above to open their Field Brief Dossiers, 8-Criteria Scorecards, and Matrix Notes.
         </div>
       </div>
     </section>
 
     <!-- =================================================================== -->
-    <!-- PART 3: LIVE MATRIX SUMMARY & DAY 3 CHECKPOINT                      -->
+    <!-- PART 3: PROGRAM SUMMARY & SYNTHESIS CHECKPOINT                      -->
     <!-- =================================================================== -->
     <section class="bg-white rounded-2xl border border-stone-200 p-5 sm:p-7 shadow-xs space-y-6">
       <div class="border-b border-stone-200 pb-4">
-        <span class="text-xs font-bold uppercase tracking-wider text-warmamber-700">Part 4 &bull; Cross-Program Synthesis</span>
+        <span class="text-xs font-bold uppercase tracking-wider text-warmamber-700">Part 3 &bull; Cross-Program Synthesis</span>
         <h2 class="text-xl sm:text-2xl font-extrabold text-forest-900 mt-1">Program Summary</h2>
         <p class="text-xs sm:text-sm text-stone-600 mt-0.5">
-          Review how your 4 selected programs compare across conservation levels, 8-criteria scores, and biodiversity values.
+          Review how your 3 selected programs compare across conservation levels, 8-criteria scores, and biodiversity values.
         </p>
       </div>
 
