@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wildlife Conservation Program Investigation</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            forest: {
+              50: '#f2f8f5',
+              100: '#dfeee6',
+              700: '#2d6a4f',
+              800: '#23533e',
+              900: '#1b4332',
+              950: '#112a1f',
+            },
+            warmamber: {
+              50: '#fffbeb',
+              100: '#fef3c7',
+              500: '#f59e0b',
+              600: '#d97706',
+              700: '#b45309',
+            },
+            stonebg: '#fafaf8',
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      background-color: #fafaf8;
+      color: #1f2937;
+    }
+    @media print {
+      .no-print {
+        display: none !important;
+      }
+      body {
+        background-color: #ffffff !important;
+      }
+      #report-modal {
+        position: static !important;
+        background: #ffffff !important;
+        padding: 0 !important;
+        display: block !important;
+      }
+      #report-modal-card {
+        box-shadow: none !important;
+        border: none !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        max-height: none !important;
+        overflow: visible !important;
+        padding: 0 !important;
+      }
+      #report-modal-card * {
+        overflow-wrap: break-word !important;
+        word-wrap: break-word !important;
+        word-break: break-word !important;
+      }
+      #report-modal-card .grid {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 0.5rem !important;
+      }
+      #report-modal-card .grid > div {
+        flex: 1 1 100% !important;
+        max-width: 100% !important;
+      }
+      #report-modal-card .rounded-xl,
+      #report-modal-card .rounded-lg,
+      #report-modal-card li {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
+    }
+  </style>
+</head>
+<body class="font-sans antialiased min-h-screen flex flex-col">
+
+  <!-- =================================================================== -->
+  <!-- STICKY TOP HEADER                                                   -->
+  <!-- =================================================================== -->
+  <header class="sticky top-0 z-40 bg-forest-900 text-white shadow-md no-print">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3.5 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+      <!-- Title & Target Goal -->
+      <div class="flex items-start sm:items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-warmamber-600/20 border border-warmamber-500/40 flex items-center justify-center shrink-0">
+          <!-- Elephant Emblem SVG -->
+          <svg class="w-6 h-6 text-warmamber-500" viewBox="0 0 64 64" fill="currentColor" aria-hidden="true">
+            <path d="M51 24c-1.5-5.5-6.5-9-12.5-9H25c-6.6 0-12 5.4-12 12v7c0 3.3-2.2 6-5 6v4c5 0 9-4 9-9v-3c1.5 1.8 3.7 3 6 3h1v14h6V36h10v13h6V35.5c2.4-1.2 4-3.7 4-6.5v-1h3c1.7 0 3 1.3 3 3v7h4v-7c0-3.5-2.5-6.4-6-7zM21 25a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-base sm:text-xl font-extrabold tracking-tight leading-snug">
+            Wildlife Conservation Program Investigation
+          </h1>
+          <p class="text-xs text-forest-100/90 font-medium">
+            Target: Evaluate 3 real-world elephant conservation programs using levels of action &amp; 8 scientific criteria
+          </p>
+        </div>
+      </div>
+
+      <!-- Auto-Save Indicator, Progress Bar & Save/Print Button -->
+      <div class="flex flex-wrap items-center gap-2.5">
+        <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-forest-100 bg-forest-950/75 border border-forest-700/80 rounded-xl px-3 py-1.5">
+          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          <span>Auto-saved</span>
+        </span>
+
+        <div class="bg-forest-950/75 border border-forest-700/80 rounded-xl px-3 py-1.5 flex items-center gap-2">
+          <span class="text-xs text-forest-100/85">Progress:</span>
+          <span id="progress-text" class="text-xs font-bold text-warmamber-500">0%</span>
+          <div class="w-14 sm:w-20 h-2 bg-forest-950 rounded-full overflow-hidden border border-forest-700">
+            <div id="progress-bar" class="h-full bg-warmamber-500 transition-all duration-300" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onclick="openReportModal()"
+          class="px-3.5 py-1.5 rounded-xl bg-warmamber-600 hover:bg-warmamber-700 text-white text-xs sm:text-sm font-bold shadow-xs transition flex items-center gap-1.5 cursor-pointer"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+          </svg>
+          <span>Save / Print</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- =================================================================== -->
+  <!-- MAIN SOLO WORKSPACE                                                 -->
+  <!-- =================================================================== -->
+  <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-8 no-print">
+
+    <!-- =================================================================== -->
+    <!-- PART 2: SELECT 3 CONSERVATION PROGRAMS & INVESTIGATE FIELD BRIEFS   -->
+    <!-- =================================================================== -->
+    <section class="bg-white rounded-2xl border border-stone-200 p-5 sm:p-7 shadow-xs space-y-6">
+      <div class="border-b border-stone-200 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-warmamber-700">Part 2 &bull; Choice-of-Three Solo Investigation</span>
+          <h2 class="text-xl sm:text-2xl font-extrabold text-forest-900 mt-1">Select Any 3 Conservation Programs to Investigate</h2>
+          <p class="text-xs sm:text-sm text-stone-600 mt-0.5">
+            Choose <strong>3 of the 6 programs</strong> below (try mixing different conservation levels such as National Parks, NGOs, and Global plans). Selecting a program opens its Field Brief and Investigation Matrix below.
+          </p>
+        </div>
+
+        <div class="shrink-0 rounded-xl bg-forest-50 border border-forest-700/25 px-4 py-2.5 text-center">
+          <div class="text-[11px] font-bold uppercase text-forest-700">Programs Selected</div>
+          <div id="selected-count-pill" class="text-lg font-extrabold text-forest-900">0 / 3</div>
+        </div>
+      </div>
+
+      <!-- Inline Selection Notice (Replaces alert()) -->
+      <div id="selection-notice" class="hidden rounded-xl bg-warmamber-50 border border-warmamber-500/40 px-4 py-2.5 text-xs sm:text-sm font-bold text-warmamber-700">
+        You have already selected 3 programs. Deselect one of your active programs first if you want to swap in a different one.
+      </div>
+
+      <!-- 6-Program Selection Grid -->
+      <div id="program-selector-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Populated dynamically via JS -->
+      </div>
+
+      <!-- Active Program Investigation Dossiers -->
+      <div id="dossiers-container" class="space-y-6 pt-2">
+        <div class="rounded-2xl bg-stonebg border border-dashed border-stone-300 p-8 text-center text-xs sm:text-sm text-stone-600">
+          Select up to <strong>3 programs</strong> from the cards above to open their Field Brief Dossiers, 8-Criteria Scorecards, and Matrix Notes.
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- PART 3: LIVE MATRIX SUMMARY & DAY 3 CHECKPOINT                      -->
+    <!-- =================================================================== -->
+    <section class="bg-white rounded-2xl border border-stone-200 p-5 sm:p-7 shadow-xs space-y-6">
+      <div class="border-b border-stone-200 pb-4">
+        <span class="text-xs font-bold uppercase tracking-wider text-warmamber-700">Part 3 &bull; Cross-Program Synthesis</span>
+        <h2 class="text-xl sm:text-2xl font-extrabold text-forest-900 mt-1">Your 3-Program Investigation Matrix &amp; Checkpoint</h2>
+        <p class="text-xs sm:text-sm text-stone-600 mt-0.5">
+          Review how your 3 selected programs compare across conservation levels, 8-criteria scores, and biodiversity values.
+        </p>
+      </div>
+
+      <!-- 4 Conservation Levels Interactive Cards -->
+      <div class="space-y-3">
+        <h3 class="text-sm sm:text-base font-extrabold text-forest-900">1. Four Levels of Wildlife Conservation</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+          <div class="rounded-2xl border border-stone-200 bg-stonebg p-4 space-y-1.5">
+            <span class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-warmamber-600 text-white">Level 1</span>
+            <h4 class="font-extrabold text-forest-900 text-sm sm:text-base">Individual Level</h4>
+            <p class="text-xs text-stone-600 leading-relaxed">
+              Personal choices, ethical consumerism (avoiding ivory products), citizen science reporting, and supporting verified conservation charities.
+            </p>
+          </div>
+
+          <div class="rounded-2xl border border-stone-200 bg-stonebg p-4 space-y-1.5">
+            <span class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-forest-700 text-white">Level 2</span>
+            <h4 class="font-extrabold text-forest-900 text-sm sm:text-base">Community Level</h4>
+            <p class="text-xs text-stone-600 leading-relaxed">
+              Village-led crop deterrents (beehive/chili fences), local wildlife scouts, community-owned ecolodges, and local school education.
+            </p>
+          </div>
+
+          <div class="rounded-2xl border border-stone-200 bg-stonebg p-4 space-y-1.5">
+            <span class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-forest-900 text-white">Level 3</span>
+            <h4 class="font-extrabold text-forest-900 text-sm sm:text-base">National Level</h4>
+            <p class="text-xs text-stone-600 leading-relaxed">
+              National parks, government anti-poaching laws, wildlife corridor zoning, and country-wide elephant management policies.
+            </p>
+          </div>
+
+          <div class="rounded-2xl border border-stone-200 bg-stonebg p-4 space-y-1.5">
+            <span class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-warmamber-700 text-white">Level 4</span>
+            <h4 class="font-extrabold text-forest-900 text-sm sm:text-base">Global Level</h4>
+            <p class="text-xs text-stone-600 leading-relaxed">
+              International treaties (like CITES ivory trade bans), cross-border wildlife corridors, and global NGO research networks.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- The 8 Evaluation Criteria Grid -->
+      <div class="space-y-3 pt-1">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <h3 class="text-sm sm:text-base font-extrabold text-forest-900">2. The 8 Conservation Evaluation Criteria</h3>
+          <span class="text-xs font-semibold text-stone-500">You will score each chosen program out of these 8 criteria in Part 2</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+          <div class="rounded-xl bg-forest-50/70 border border-forest-700/20 p-3">
+            <div class="font-extrabold text-forest-900">1. Anti-Poaching Patrols</div>
+            <p class="text-stone-600 mt-1">Active field patrols monitoring parks and deterring illegal hunting.</p>
+          </div>
+          <div class="rounded-xl bg-forest-50/70 border border-forest-700/20 p-3">
+            <div class="font-extrabold text-forest-900">2. Ranger &amp; Staff Training</div>
+            <p class="text-stone-600 mt-1">Equipping and training wildlife rangers, ecologists, and local scouts.</p>
+          </div>
+          <div class="rounded-xl bg-forest-50/70 border border-forest-700/20 p-3">
+            <div class="font-extrabold text-forest-900">3. Local / Native Cooperation</div>
+            <p class="text-stone-600 mt-1">Partnering with local communities so residents benefit from conservation.</p>
+          </div>
+          <div class="rounded-xl bg-forest-50/70 border border-forest-700/20 p-3">
+            <div class="font-extrabold text-forest-900">4. Wildlife Law Enforcement</div>
+            <p class="text-stone-600 mt-1">Enforcing national wildlife laws, prosecuting trafficking, and regulating trade.</p>
+          </div>
+          <div class="rounded-xl bg-warmamber-50/70 border border-warmamber-500/25 p-3">
+            <div class="font-extrabold text-forest-900">5. Protected Area Designation</div>
+            <p class="text-stone-600 mt-1">Establishing or expanding parks, reserves, and migration corridors.</p>
+          </div>
+          <div class="rounded-xl bg-warmamber-50/70 border border-warmamber-500/25 p-3">
+            <div class="font-extrabold text-forest-900">6. Public Awareness Campaigns</div>
+            <p class="text-stone-600 mt-1">Educating students, communities, and global audiences to reduce demand.</p>
+          </div>
+          <div class="rounded-xl bg-warmamber-50/70 border border-warmamber-500/25 p-3">
+            <div class="font-extrabold text-forest-900">7. Scientific Research</div>
+            <p class="text-stone-600 mt-1">Tracking populations, GPS movement, genetics, and habitat health over time.</p>
+          </div>
+          <div class="rounded-xl bg-warmamber-50/70 border border-warmamber-500/25 p-3">
+            <div class="font-extrabold text-forest-900">8. Extractive Industry BMPs</div>
+            <p class="text-stone-600 mt-1">Best Management Practices minimizing damage from logging, mining, or farming.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Framework Check -->
+      <div class="rounded-2xl bg-stonebg border border-stone-200 p-4 sm:p-5 space-y-3">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <h3 class="text-sm sm:text-base font-extrabold text-forest-900">Quick Check: Applying the Criteria</h3>
+            <p class="text-xs text-stone-600">Verify how conservation actions map to levels and criteria before opening your field briefs.</p>
+          </div>
+          <button
+            type="button"
+            onclick="checkFrameworkQuiz()"
+            class="self-start sm:self-auto px-4 py-2 rounded-xl bg-forest-900 hover:bg-forest-800 text-white text-xs font-bold shadow-xs transition cursor-pointer"
+          >
+            Check Answers
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-white rounded-xl border border-stone-200 p-3.5 space-y-2">
+            <label for="fw-q1" class="block text-xs sm:text-sm font-semibold text-stone-800">
+              1. Training local villagers to install beehive fences and share ecotourism profits best demonstrates which evaluation criterion?
+            </label>
+            <select id="fw-q1" class="w-full rounded-lg border border-stone-300 bg-stonebg px-3 py-1.5 text-xs sm:text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-forest-700">
+              <option value="">-- Select Criterion --</option>
+              <option value="coop">3. Local / Native Cooperation</option>
+              <option value="bmp">8. Extractive Industry BMPs</option>
+              <option value="protected">5. Protected Area Designation</option>
+            </select>
+            <p id="fw-q1-fb" class="text-xs font-semibold hidden"></p>
+          </div>
+
+          <div class="bg-white rounded-xl border border-stone-200 p-3.5 space-y-2">
+            <label for="fw-q2" class="block text-xs sm:text-sm font-semibold text-stone-800">
+              2. Requiring a timber or mining company to leave intact forest corridors around elephant habitats is an example of:
+            </label>
+            <select id="fw-q2" class="w-full rounded-lg border border-stone-300 bg-stonebg px-3 py-1.5 text-xs sm:text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-forest-700">
+              <option value="">-- Select Criterion --</option>
+              <option value="campaigns">6. Public Awareness Campaigns</option>
+              <option value="bmp">8. Extractive Industry BMPs</option>
+              <option value="patrols">1. Anti-Poaching Patrols</option>
+            </select>
+            <p id="fw-q2-fb" class="text-xs font-semibold hidden"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- PART 2: SELECT 4 CONSERVATION PROGRAMS & INVESTIGATE FIELD BRIEFS   -->
+    <!-- =================================================================== -->
+    <section class="bg-white rounded-2xl border border-stone-200 p-5 sm:p-7 shadow-xs space-y-6">
+      <div class="border-b border-stone-200 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-warmamber-700">Part 2 &bull; Choice-of-Four Solo Investigation</span>
+          <h2 class="text-xl sm:text-2xl font-extrabold text-forest-900 mt-1">Select Any 4 Conservation Programs to Investigate</h2>
+          <p class="text-xs sm:text-sm text-stone-600 mt-0.5">
+            Choose <strong>4 of the 6 programs</strong> below (try mixing different conservation levels such as National Parks, NGOs, and Global plans). Selecting a program opens its Field Brief and Investigation Matrix below.
+          </p>
+        </div>
+
+        <div class="shrink-0 rounded-xl bg-forest-50 border border-forest-700/25 px-4 py-2.5 text-center">
+          <div class="text-[11px] font-bold uppercase text-forest-700">Programs Selected</div>
+          <div id="selected-count-pill" class="text-lg font-extrabold text-forest-900">0 / 4</div>
+        </div>
+      </div>
+
+      <!-- Inline Selection Notice (Replaces alert()) -->
+      <div id="selection-notice" class="hidden rounded-xl bg-warmamber-50 border border-warmamber-500/40 px-4 py-2.5 text-xs sm:text-sm font-bold text-warmamber-700">
+        You have already selected 4 programs. Deselect one of your active programs first if you want to swap in a different one.
+      </div>
+
+      <!-- 6-Program Selection Grid -->
+      <div id="program-selector-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Populated dynamically via JS -->
+      </div>
+
+      <!-- Active Program Investigation Dossiers -->
+      <div id="dossiers-container" class="space-y-6 pt-2">
+        <div class="rounded-2xl bg-stonebg border border-dashed border-stone-300 p-8 text-center text-xs sm:text-sm text-stone-600">
+          Select up to <strong>4 programs</strong> from the cards above to open their Field Brief Dossiers, 8-Criteria Scorecards, and Matrix Notes.
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- PART 3: LIVE MATRIX SUMMARY & DAY 3 CHECKPOINT                      -->
+    <!-- =================================================================== -->
+    <section class="bg-white rounded-2xl border border-stone-200 p-5 sm:p-7 shadow-xs space-y-6">
+      <div class="border-b border-stone-200 pb-4">
+        <span class="text-xs font-bold uppercase tracking-wider text-warmamber-700">Part 3 &bull; Cross-Program Synthesis</span>
+        <h2 class="text-xl sm:text-2xl font-extrabold text-forest-900 mt-1">Your 4-Program Investigation Matrix &amp; Checkpoint</h2>
+        <p class="text-xs sm:text-sm text-stone-600 mt-0.5">
+          Review how your 4 selected programs compare across conservation levels, 8-criteria scores, and biodiversity values.
+        </p>
+      </div>
+
+      <!-- Live Auto-Generated Comparison Table -->
+      <div class="overflow-x-auto rounded-2xl border border-stone-200">
+        <table class="w-full text-xs sm:text-sm border-collapse">
+          <thead>
+            <tr class="bg-forest-900 text-white">
+              <th class="py-3 px-4 text-left font-bold">Selected Program</th>
+              <th class="py-3 px-4 text-left font-bold">Conservation Level</th>
+              <th class="py-3 px-4 text-left font-bold">8-Criteria Score</th>
+              <th class="py-3 px-4 text-left font-bold">Biodiversity Values Addressed</th>
+              <th class="py-3 px-4 text-left font-bold">Multi-Species Protection</th>
+            </tr>
+          </thead>
+          <tbody id="summary-matrix-body" class="divide-y divide-stone-200 bg-white">
+            <tr>
+              <td colspan="5" class="py-5 px-4 text-center text-stone-500 italic">
+                Select programs in Part 2 to populate your live comparison matrix.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 2 Checkpoint Reflection Prompts -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-1">
+        <div class="space-y-2">
+          <label for="day3-q1" class="block text-sm font-bold text-forest-900">
+            1. Which of your 3 investigated programs earned the highest score on the 8-Criteria Scorecard, and which criteria set it apart?
+          </label>
+          <textarea
+            id="day3-q1"
+            rows="3"
+            placeholder="Identify your highest-scoring program and list the specific criteria (e.g., patrols, local cooperation, research) it fulfills..."
+            class="w-full rounded-xl border border-stone-300 bg-stonebg p-3 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-forest-700"
+          ></textarea>
+        </div>
+
+        <div class="space-y-2">
+          <label for="day3-q2" class="block text-sm font-bold text-forest-900">
+            2. Compare two programs operating at different conservation levels (e.g., National vs. Community or Global). How do their strengths differ?
+          </label>
+          <textarea
+            id="day3-q2"
+            rows="3"
+            placeholder="Contrast how scale (local community work vs. national laws or global research) changes what each program can accomplish..."
+            class="w-full rounded-xl border border-stone-300 bg-stonebg p-3 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-forest-700"
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- Bottom Save/Print Trigger -->
+      <div class="pt-3 border-t border-stone-200 flex justify-end">
+        <button
+          type="button"
+          onclick="openReportModal()"
+          class="px-5 py-3 rounded-xl bg-forest-900 hover:bg-forest-800 text-white text-xs sm:text-sm font-bold shadow-xs transition flex items-center gap-2 cursor-pointer"
+        >
+          <svg class="w-4 h-4 text-warmamber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+          </svg>
+          <span>View, Save, or Print Investigation Matrix</span>
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =================================================================== -->
+  <!-- FOOTER WITH RESET PROGRESS CONTROL                                  -->
+  <!-- =================================================================== -->
+  <footer class="bg-stone-100 border-t border-stone-200 py-5 px-4 sm:px-6 text-xs text-stone-600 no-print">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+      <span>Conservation Biology &bull; Real-World Wildlife Program Evaluation</span>
+      <div class="flex items-center gap-2">
+        <button
+          type="button"
+          id="reset-trigger-btn"
+          onclick="showResetConfirm()"
+          class="px-3.5 py-1.5 rounded-xl border border-stone-300 bg-white hover:bg-red-50 hover:border-red-300 hover:text-red-700 text-stone-700 font-semibold transition cursor-pointer"
+        >
+          Reset All Progress
+        </button>
+        <div id="reset-confirm-bar" class="hidden flex items-center gap-2 bg-red-50 border border-red-300 rounded-xl px-3 py-1">
+          <span class="text-red-800 font-semibold">Clear all saved investigation notes?</span>
+          <button
+            type="button"
+            onclick="confirmResetAll()"
+            class="px-2.5 py-1 rounded-lg bg-red-600 hover:bg-red-700 text-white font-bold cursor-pointer"
+          >
+            Yes, Reset
+          </button>
+          <button
+            type="button"
+            onclick="cancelReset()"
+            class="px-2.5 py-1 rounded-lg bg-white border border-stone-300 text-stone-700 font-semibold cursor-pointer"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- =================================================================== -->
+  <!-- PRINTABLE & COPYABLE INVESTIGATION REPORT MODAL                     -->
+  <!-- =================================================================== -->
+  <div id="report-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div id="report-modal-card" class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-stone-300 p-6 sm:p-8 space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4 border-b-2 border-forest-900 pb-4">
+        <div class="space-y-1.5">
+          <span class="text-xs font-bold uppercase tracking-wider text-warmamber-700">Student Conservation Matrix</span>
+          <h2 class="text-xl sm:text-2xl font-extrabold text-forest-900">Wildlife Conservation Program Investigation Report</h2>
+          <div class="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-stone-700 pt-1">
+            <label for="rep-student-input" class="font-bold text-forest-900 no-print">Student Name:</label>
+            <input
+              id="rep-student-input"
+              type="text"
+              placeholder="Enter your name before printing..."
+              oninput="onStudentNameChange(this.value)"
+              class="no-print rounded-lg border border-stone-300 bg-stonebg px-2.5 py-1 text-xs sm:text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-forest-700"
+            />
+            <span class="hidden print:inline"><strong>Student:</strong> <span id="rep-student-print-name">______________________</span> &nbsp;&bull;&nbsp;</span>
+            <span><strong>Date:</strong> <span id="rep-date"></span></span>
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 no-print shrink-0">
+          <button
+            type="button"
+            onclick="copyReportToClipboard()"
+            class="px-3.5 py-2 rounded-xl bg-warmamber-600 hover:bg-warmamber-700 text-white text-xs font-bold shadow-xs transition cursor-pointer"
+          >
+            Copy to Clipboard
+          </button>
+          <button
+            type="button"
+            onclick="window.print()"
+            class="px-3.5 py-2 rounded-xl bg-forest-900 hover:bg-forest-800 text-white text-xs font-bold shadow-xs transition cursor-pointer"
+          >
+            Print / Save as PDF
+          </button>
+          <button
+            type="button"
+            onclick="closeReportModal()"
+            class="px-3 py-2 rounded-xl bg-stone-200 hover:bg-stone-300 text-stone-800 text-xs font-bold transition cursor-pointer"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+
+      <div id="copy-toast" class="hidden rounded-xl bg-emerald-50 border border-emerald-300 text-emerald-800 px-4 py-2.5 text-xs font-bold no-print">
+        Investigation matrix copied to your clipboard!
+      </div>
+
+      <div class="space-y-5 text-xs sm:text-sm text-stone-800">
+        <!-- Investigated Programs -->
+        <div class="space-y-3">
+          <h3 class="font-extrabold text-forest-900 uppercase tracking-wider text-xs">Part 2: Investigated Conservation Programs (3 Selected)</h3>
+          <div id="rep-programs-list" class="space-y-3"></div>
+        </div>
+
+        <!-- Checkpoint Reflections -->
+        <div class="rounded-xl border border-stone-200 p-4 space-y-3">
+          <h3 class="font-extrabold text-forest-900 uppercase tracking-wider text-xs">Part 3: Synthesis Checkpoint</h3>
+          <div>
+            <div class="font-bold text-forest-900">1. Highest-scoring program &amp; key criteria:</div>
+            <p id="rep-q1" class="mt-0.5 whitespace-pre-line text-stone-700 italic">No response entered.</p>
+          </div>
+          <div class="pt-2 border-t border-stone-200">
+            <div class="font-bold text-forest-900">2. Comparing different conservation levels:</div>
+            <p id="rep-q2" class="mt-0.5 whitespace-pre-line text-stone-700 italic">No response entered.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================================================================== -->
+  <!-- JAVASCRIPT: 6 REAL-WORLD FIELD BRIEFS, 8-CRITERIA SCORECARD & STATE -->
+  <!-- =================================================================== -->
+  <script>
+    const STORAGE_KEY = 'conservation_program_investigation_v1';
+
+    const CRITERIA_LIST = [
+      { id: 'c1', label: '1. Anti-Poaching Patrols' },
+      { id: 'c2', label: '2. Ranger & Staff Training' },
+      { id: 'c3', label: '3. Local / Native Cooperation' },
+      { id: 'c4', label: '4. Wildlife Law Enforcement' },
+      { id: 'c5', label: '5. Protected Area Designation' },
+      { id: 'c6', label: '6. Public Awareness Campaigns' },
+      { id: 'c7', label: '7. Scientific Research' },
+      { id: 'c8', label: '8. Extractive Industry BMPs' }
+    ];
+
+    const VALUE_OPTIONS = ['Environmental', 'Aesthetic', 'Economic', 'Intrinsic'];
+
+    const PROGRAMS = [
+      {
+        id: 'addo',
+        name: 'Addo Elephant National Park',
+        region: 'Eastern Cape, South Africa',
+        levelBadge: 'National Level',
+        overview: 'Mission: Prevent the extinction of the southern-most African savanna elephant population and restore intact Eastern Cape ecosystems. Key Actions: Originally founded in 1931 to rescue just 11 surviving Cape elephants from ivory and retaliatory hunting, SANParks expanded the reserve into a 1,640 km² fenced sanctuary spanning five distinct biomes. Armed anti-poaching rangers conduct daily perimeter and drone patrols, park biologists monitor herd genetics and vegetation carrying capacity, visitor education centers promote wildlife appreciation, and strict national wildlife laws prohibit hunting while channeling safari tourism fees into regional infrastructure.',
+        fundingScale: 'Government-funded SANParks agency (~$8M–$12M annual park budget) heavily supplemented by domestic and international safari ecotourism revenue.',
+        multiSpecies: 'Protects black rhinos, Cape buffalo, lions, spotted hyenas, flightless dung beetles, and coastal whales/sharks across 5 distinct biomes.',
+        evidenceSuccess: 'Elephant numbers rebounded from 11 individuals in 1931 to >600 today with near-zero poaching inside the electrified perimeter, while generating major regional tourism jobs.',
+        suggestedCriteria: ['c1', 'c2', 'c4', 'c5', 'c6', 'c7']
+      },
+      {
+        id: 'tarangire',
+        name: 'Tarangire Elephant Project (WCS)',
+        region: 'Northern Tanzania',
+        levelBadge: 'National & Community',
+        overview: 'Mission: Safeguard northern Tanzania’s ~3,000+ savanna elephants by keeping historic seasonal migration routes open between Tarangire National Park and surrounding dispersal lands. Key Actions: Operated by the Wildlife Conservation Society (WCS) since 1993, field scientists track individual elephant families using long-term demographic photo-ID and satellite GPS collars. The team trains local Maasai village game scouts to deter crop raids with chili-grease fences and early-warning alerts, negotiates community land-use easements to protect wildlife corridors from commercial farming, and runs school conservation workshops.',
+        fundingScale: 'Mid-sized NGO research & corridor grant budget (~$500K–$1.5M/year) funded by conservation foundations and wildlife donors.',
+        multiSpecies: 'Keeping open migration corridors benefits wildebeest, zebras, giraffes, lions, and over 550 bird species that share the Tarangire River watershed.',
+        evidenceSuccess: 'Long-term demographic monitoring identified key dry-season corridors, leading to village land-use easements that reduced poaching spikes and preserved vital migration routes.',
+        suggestedCriteria: ['c1', 'c2', 'c3', 'c5', 'c6', 'c7']
+      },
+      {
+        id: 'ewb',
+        name: 'Elephants Without Borders (EWB)',
+        region: 'Botswana & Kavango-Zambezi (KAZA)',
+        levelBadge: 'Global & Cross-Border',
+        overview: 'Mission: Conserve cross-border elephant populations and reconnect fragmented habitats across the five-nation Kavango-Zambezi (KAZA) Transfrontier Conservation Area. Key Actions: Headquartered in Botswana, EWB led the standardized Great Elephant Census aerial transect surveys across 18 African countries and fits elephants with satellite GPS collars to map international migration corridors. EWB trains government wildlife officers in aerial survey and anti-poaching intelligence, advises international CITES policymakers on ivory trade enforcement, and runs youth environmental camps in rural villages.',
+        fundingScale: 'International NGO & philanthropic coalition (led a $7M+ multi-country aerial census plus ongoing telemetry and community outreach budgets).',
+        multiSpecies: 'Aerial transect surveys simultaneously track hippos, giraffes, buffalo, roan/sable antelope, and wetland birds across the Okavango-Zambezi basin.',
+        evidenceSuccess: 'Completed the first standardized pan-African aerial elephant survey (352,271 savanna elephants counted), directly shaping CITES policy and cross-border anti-poaching deployments.',
+        suggestedCriteria: ['c2', 'c3', 'c4', 'c5', 'c6', 'c7']
+      },
+      {
+        id: 'amboseli',
+        name: 'Amboseli Trust for Elephants (ATE)',
+        region: 'Southern Kenya',
+        levelBadge: 'Community & Research',
+        overview: 'Mission: Ensure the long-term survival of wild elephants in the Amboseli ecosystem by uniting world-leading behavioral science with Maasai community coexistence. Key Actions: Running continuously since 1972—the longest-running study of wild elephants on Earth—researchers track over 1,900 individually known elephants to study social structure, calf survival, and drought resilience. ATE trains and equips Maasai community scouts to patrol group ranches, operates a rapid-response unit to prevent retaliatory spearings after livestock or crop incidents, and funds secondary school scholarships for local youth.',
+        fundingScale: 'Nonprofit research & community trust (~$1M–$2M/year) supported by individual donors, grants, and wildlife film/educational partnerships.',
+        multiSpecies: 'Protects open savanna-swamp habitats shared by cheetahs, lions, Maasai giraffes, wildebeest, and Kilimanjaro watershed wildlife.',
+        evidenceSuccess: 'Sustained a thriving population of ~1,900+ individually known elephants despite severe droughts, while cutting retaliatory spearings through rapid community conflict response.',
+        suggestedCriteria: ['c1', 'c2', 'c3', 'c6', 'c7']
+      },
+      {
+        id: 'zimbabwe',
+        name: 'Zimbabwe National Elephant Management Plan',
+        region: 'Zimbabwe (Hwange, Zambezi & Sebungwe)',
+        levelBadge: 'National Policy',
+        overview: 'Mission: Manage and protect Zimbabwe’s ~82,000+ elephants—the world’s second-largest national herd—while balancing rural community livelihoods and ecological carrying capacity. Key Actions: Implemented by ZimParks under national wildlife legislation, the plan designates vast protected national parks and safari buffer zones, deploys armed ranger anti-poaching task forces, enforces strict anti-trafficking penalties, and uses the CAMPFIRE program to share wildlife revenue with rural district councils. It also establishes land-use guidelines to limit habitat damage from logging, mining, and agricultural expansion.',
+        fundingScale: 'National wildlife authority (ZimParks) operating on constrained state budgets (~$15M–$25M nationwide across all parks) supplemented by international NGO partners.',
+        multiSpecies: 'Covers massive savanna woodlands supporting painted wolves (African wild dogs), black/white rhinos, leopards, and sable antelope.',
+        evidenceSuccess: 'Maintained high overall elephant numbers (>82,000) in Hwange and Gonarezhou, though severe funding shortages led to a 74% localized decline in the Sebungwe region.',
+        suggestedCriteria: ['c1', 'c2', 'c3', 'c4', 'c5', 'c8']
+      },
+      {
+        id: 'aza',
+        name: 'AZA SAFE: Saving Animals From Extinction',
+        region: 'Global (North American Zoos & Field Partners)',
+        levelBadge: 'Global & Individual',
+        overview: 'Mission: Mobilize accredited zoos, aquariums, scientists, and millions of everyday visitors to halt elephant population declines in Africa and Asia. Key Actions: AZA SAFE pools funding and veterinary expertise to support frontline field partners with anti-poaching patrol gear, detection dogs, and ranger training in range countries. On the scientific front, zoo researchers develop vaccines against deadly elephant herpesvirus (EEHV) and study elephant endocrinology and nutrition. Publicly, AZA runs nationwide consumer awareness campaigns urging individuals to reject ivory products and support wildlife-friendly policies.',
+        fundingScale: 'Collaborative zoo network contributing $3M+ annually in direct field conservation grants plus millions of public zoo visitors reached.',
+        multiSpecies: 'AZA SAFE coordinates multi-species conservation action plans across 30+ threatened species, including rhinos, cheetahs, vultures, and gorillas.',
+        evidenceSuccess: 'Mobilized millions of zoo visitors to support ivory-ban legislation while funding ranger gear, sniffer dogs, and elephant herpesvirus (EEHV) vaccine breakthroughs.',
+        suggestedCriteria: ['c1', 'c2', 'c3', 'c6', 'c7']
+      }
+    ];
+
+    let state = {
+      studentName: '',
+      fwQuiz: { q1: '', q2: '' },
+      selectedIds: [],
+      notes: {},
+      reflections: { q1: '', q2: '' }
+    };
+
+    function getDefaultProgramNote(prog) {
+      return {
+        level: prog.levelBadge,
+        goals: '',
+        cost: '',
+        multiSpecies: '',
+        evidence: '',
+        criteria: {},
+        values: []
+      };
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadState();
+      applySavedValuesToDOM();
+      renderSelectorGrid();
+      renderDossiers();
+      renderSummaryMatrix();
+      updateProgressBar();
+    });
+
+    function applySavedValuesToDOM() {
+      document.getElementById('fw-q1').value = state.fwQuiz.q1 || '';
+      document.getElementById('fw-q2').value = state.fwQuiz.q2 || '';
+      document.getElementById('day3-q1').value = state.reflections.q1 || '';
+      document.getElementById('day3-q2').value = state.reflections.q2 || '';
+
+      document.getElementById('fw-q1').addEventListener('change', (e) => {
+        state.fwQuiz.q1 = e.target.value;
+        saveState();
+      });
+      document.getElementById('fw-q2').addEventListener('change', (e) => {
+        state.fwQuiz.q2 = e.target.value;
+        saveState();
+      });
+
+      ['q1', 'q2'].forEach((qKey) => {
+        document.getElementById(`day3-${qKey}`).addEventListener('input', (e) => {
+          state.reflections[qKey] = e.target.value;
+          saveState();
+          updateProgressBar();
+        });
+      });
+    }
+
+    function onStudentNameChange(val) {
+      state.studentName = val;
+      const span = document.getElementById('rep-student-print-name');
+      if (span) span.textContent = val.trim() || '______________________';
+      saveState();
+    }
+
+    // ==================== PART 1: FRAMEWORK QUICK CHECK ====================
+    function checkFrameworkQuiz() {
+      const q1 = document.getElementById('fw-q1').value;
+      const q2 = document.getElementById('fw-q2').value;
+      const fb1 = document.getElementById('fw-q1-fb');
+      const fb2 = document.getElementById('fw-q2-fb');
+
+      fb1.classList.remove('hidden');
+      if (q1 === 'coop') {
+        fb1.className = 'text-xs font-semibold text-emerald-700';
+        fb1.textContent = 'Correct! Local / Native Cooperation ensures neighboring residents actively participate in and benefit from conservation.';
+      } else {
+        fb1.className = 'text-xs font-semibold text-warmamber-700';
+        fb1.textContent = 'Try again—think about which criterion focuses on partnering directly with local villagers.';
+      }
+
+      fb2.classList.remove('hidden');
+      if (q2 === 'bmp') {
+        fb2.className = 'text-xs font-semibold text-emerald-700';
+        fb2.textContent = 'Correct! Extractive Industry BMPs (Best Management Practices) reduce habitat fragmentation from logging, mining, or plantations.';
+      } else {
+        fb2.className = 'text-xs font-semibold text-warmamber-700';
+        fb2.textContent = 'Try again—look for the criterion that addresses logging, mining, or commercial land use.';
+      }
+
+      saveState();
+      updateProgressBar();
+    }
+
+    // ==================== PART 2: PROGRAM SELECTION & FIELD BRIEFS ====================
+    function toggleProgramSelection(progId) {
+      const idx = state.selectedIds.indexOf(progId);
+      const notice = document.getElementById('selection-notice');
+      notice.classList.add('hidden');
+
+      if (idx !== -1) {
+        state.selectedIds.splice(idx, 1);
+      } else {
+        if (state.selectedIds.length >= 3) {
+          notice.classList.remove('hidden');
+          return;
+        }
+        state.selectedIds.push(progId);
+        if (!state.notes[progId]) {
+          const prog = PROGRAMS.find((p) => p.id === progId);
+          state.notes[progId] = getDefaultProgramNote(prog);
+        }
+      }
+
+      saveState();
+      renderSelectorGrid();
+      renderDossiers();
+      renderSummaryMatrix();
+      updateProgressBar();
+    }
+
+    function renderSelectorGrid() {
+      const grid = document.getElementById('program-selector-grid');
+      document.getElementById('selected-count-pill').textContent = `${state.selectedIds.length} / 3`;
+
+      grid.innerHTML = PROGRAMS.map((p) => {
+        const isSelected = state.selectedIds.includes(p.id);
+        const cardClass = isSelected
+          ? 'border-2 border-forest-900 bg-forest-50/75 shadow-sm'
+          : 'border border-stone-200 bg-stonebg hover:border-forest-700';
+
+        return `
+          <button
+            type="button"
+            onclick="toggleProgramSelection('${p.id}')"
+            class="text-left rounded-2xl p-4 transition cursor-pointer flex flex-col justify-between space-y-3 ${cardClass}"
+          >
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between gap-2">
+                <span class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold ${isSelected ? 'bg-forest-900 text-white' : 'bg-warmamber-100 text-warmamber-700'}">
+                  ${p.levelBadge}
+                </span>
+                <span class="text-xs font-extrabold ${isSelected ? 'text-emerald-700' : 'text-stone-400'}">
+                  ${isSelected ? '&#10003; Selected' : '+ Select'}
+                </span>
+              </div>
+              <div class="font-extrabold text-forest-900 text-sm sm:text-base">${p.name}</div>
+              <div class="text-xs font-semibold text-stone-500">${p.region}</div>
+            </div>
+            <p class="text-xs text-stone-600 line-clamp-2">${p.overview}</p>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function renderDossiers() {
+      const container = document.getElementById('dossiers-container');
+      if (state.selectedIds.length === 0) {
+        container.innerHTML = `
+          <div class="rounded-2xl bg-stonebg border border-dashed border-stone-300 p-8 text-center text-xs sm:text-sm text-stone-600">
+            Select up to <strong>3 programs</strong> from the cards above to open their Field Brief Dossiers, 8-Criteria Scorecards, and Matrix Notes.
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = state.selectedIds.map((progId, index) => {
+        const p = PROGRAMS.find((item) => item.id === progId);
+        if (!p) return '';
+        if (!state.notes[progId]) {
+          state.notes[progId] = getDefaultProgramNote(p);
+        }
+        const note = state.notes[progId];
+        const score = countCriteriaScore(progId);
+
+        return `
+          <article class="rounded-2xl border-2 border-forest-900/20 bg-stonebg/60 p-5 sm:p-6 space-y-5">
+            <!-- Dossier Header -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-stone-200 pb-3.5">
+              <div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="px-2.5 py-0.5 rounded-full bg-forest-900 text-white text-xs font-extrabold">Program ${index + 1} of 3</span>
+                  <span class="px-2.5 py-0.5 rounded-full bg-warmamber-100 text-warmamber-700 text-xs font-bold">${p.region}</span>
+                </div>
+                <h3 class="text-lg sm:text-xl font-extrabold text-forest-900 mt-1.5">${p.name}</h3>
+              </div>
+
+              <div class="flex items-center gap-2.5 self-start sm:self-auto">
+                <div class="rounded-xl bg-white border border-stone-300 px-3.5 py-1.5 text-center">
+                  <div class="text-[10px] font-bold uppercase text-stone-500">Criteria Score</div>
+                  <div id="score-badge-${p.id}" class="text-sm sm:text-base font-extrabold text-forest-900">${score} / 8</div>
+                </div>
+                <button
+                  type="button"
+                  onclick="toggleProgramSelection('${p.id}')"
+                  class="px-3 py-2 rounded-xl border border-stone-300 bg-white hover:bg-red-50 hover:text-red-700 text-xs font-bold text-stone-600 transition cursor-pointer"
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+
+            <!-- Built-in Field Brief Snapshot -->
+            <div class="rounded-xl bg-white border border-stone-200 p-4 space-y-2.5 text-xs sm:text-sm text-stone-700">
+              <div class="font-extrabold text-forest-900 uppercase tracking-wider text-xs">Field Brief Dossier</div>
+              <p class="leading-relaxed"><strong>Mission &amp; Actions:</strong> ${p.overview}</p>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1 text-xs">
+                <div class="rounded-lg bg-forest-50/70 p-2.5 border border-forest-700/15">
+                  <div class="font-bold text-forest-900">Funding &amp; Resource Scale</div>
+                  <p class="mt-0.5 text-stone-600">${p.fundingScale}</p>
+                </div>
+                <div class="rounded-lg bg-warmamber-50/70 p-2.5 border border-warmamber-500/20">
+                  <div class="font-bold text-warmamber-700">Multi-Species Reach</div>
+                  <p class="mt-0.5 text-stone-600">${p.multiSpecies}</p>
+                </div>
+                <div class="rounded-lg bg-stonebg p-2.5 border border-stone-200">
+                  <div class="font-bold text-forest-900">Measured Field Outcomes</div>
+                  <p class="mt-0.5 text-stone-600">${p.evidenceSuccess}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- 8-Criteria Interactive Checklist -->
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs sm:text-sm font-extrabold text-forest-900">Step A: Check All Conservation Criteria Met by This Program</span>
+                <span class="text-[11px] text-stone-500">Auto-tallies out of 8</span>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+                ${CRITERIA_LIST.map((c) => {
+                  const checked = Boolean(note.criteria && note.criteria[c.id]);
+                  return `
+                    <label class="flex items-center gap-2 rounded-xl border ${checked ? 'border-forest-700 bg-forest-50 text-forest-900' : 'border-stone-200 bg-white text-stone-700'} px-3 py-2 text-xs font-semibold cursor-pointer transition">
+                      <input
+                        type="checkbox"
+                        ${checked ? 'checked' : ''}
+                        onchange="toggleCriterion('${p.id}', '${c.id}', this.checked)"
+                        class="rounded text-forest-900 focus:ring-forest-700"
+                      />
+                      <span>${c.label}</span>
+                    </label>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+
+            <!-- Biodiversity Values Addressed Multi-Select -->
+            <div class="space-y-2">
+              <span class="block text-xs sm:text-sm font-extrabold text-forest-900">Step B: Which Biodiversity Values Does This Program Address?</span>
+              <div class="flex flex-wrap gap-2">
+                ${VALUE_OPTIONS.map((val) => {
+                  const active = Array.isArray(note.values) && note.values.includes(val);
+                  return `
+                    <button
+                      type="button"
+                      onclick="toggleProgramValue('${p.id}', '${val}')"
+                      class="px-3.5 py-1.5 rounded-full text-xs font-bold border transition cursor-pointer ${
+                        active
+                          ? 'bg-forest-900 text-white border-forest-900'
+                          : 'bg-white text-stone-700 border-stone-300 hover:border-forest-700'
+                      }"
+                    >
+                      ${active ? '&#10003; ' : ''}${val} Value
+                    </button>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+
+            <!-- Structured Matrix Investigation Fields -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5 pt-1">
+              <div class="space-y-1">
+                <label class="block text-xs font-bold text-forest-900">Primary Conservation Goals (in your own words)</label>
+                <textarea
+                  rows="2"
+                  oninput="updateProgramNote('${p.id}', 'goals', this.value)"
+                  placeholder="Summarize what this program is trying to achieve for elephants and habitats..."
+                  class="w-full rounded-xl border border-stone-300 bg-white p-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-forest-700"
+                >${note.goals || ''}</textarea>
+              </div>
+
+              <div class="space-y-1">
+                <label class="block text-xs font-bold text-forest-900">Funding / Resource Scale &amp; Multi-Species Protection</label>
+                <textarea
+                  rows="2"
+                  oninput="updateProgramNote('${p.id}', 'multiSpecies', this.value)"
+                  placeholder="Note its budget scale and what other wildlife species benefit besides elephants..."
+                  class="w-full rounded-xl border border-stone-300 bg-white p-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-forest-700"
+                >${note.multiSpecies || ''}</textarea>
+              </div>
+
+              <div class="md:col-span-2 space-y-1">
+                <label class="block text-xs font-bold text-forest-900">Evidence of Success &amp; Limitations</label>
+                <textarea
+                  rows="2"
+                  oninput="updateProgramNote('${p.id}', 'evidence', this.value)"
+                  placeholder="Cite specific data or outcomes showing whether this program works (and any challenges it faces)..."
+                  class="w-full rounded-xl border border-stone-300 bg-white p-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-forest-700"
+                >${note.evidence || ''}</textarea>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    function countCriteriaScore(progId) {
+      const note = state.notes[progId];
+      if (!note || !note.criteria) return 0;
+      return CRITERIA_LIST.reduce((sum, c) => sum + (note.criteria[c.id] ? 1 : 0), 0);
+    }
+
+    function toggleCriterion(progId, critId, isChecked) {
+      if (!state.notes[progId]) return;
+      state.notes[progId].criteria[critId] = isChecked;
+      saveState();
+      renderDossiers();
+      renderSummaryMatrix();
+      updateProgressBar();
+    }
+
+    function toggleProgramValue(progId, val) {
+      if (!state.notes[progId]) return;
+      const arr = state.notes[progId].values || [];
+      const idx = arr.indexOf(val);
+      if (idx === -1) arr.push(val);
+      else arr.splice(idx, 1);
+      state.notes[progId].values = arr;
+      saveState();
+      renderDossiers();
+      renderSummaryMatrix();
+      updateProgressBar();
+    }
+
+    function updateProgramNote(progId, field, value) {
+      if (!state.notes[progId]) return;
+      state.notes[progId][field] = value;
+      saveState();
+      renderSummaryMatrix();
+      updateProgressBar();
+    }
+
+    // ==================== PART 3: LIVE MATRIX SUMMARY ====================
+    function renderSummaryMatrix() {
+      const tbody = document.getElementById('summary-matrix-body');
+      if (state.selectedIds.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" class="py-5 px-4 text-center text-stone-500 italic">
+              Select programs in Part 2 to populate your live comparison matrix.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = state.selectedIds.map((progId) => {
+        const p = PROGRAMS.find((item) => item.id === progId);
+        const note = state.notes[progId] || {};
+        const score = countCriteriaScore(progId);
+        const vals = Array.isArray(note.values) && note.values.length > 0
+          ? note.values.join(', ')
+          : '<span class="italic text-stone-400">None selected</span>';
+        const ms = note.multiSpecies && note.multiSpecies.trim()
+          ? note.multiSpecies.trim()
+          : '<span class="italic text-stone-400">Pending notes</span>';
+
+        return `
+          <tr>
+            <td class="py-3 px-4 font-bold text-forest-900">${p.name}</td>
+            <td class="py-3 px-4 text-stone-700">${p.levelBadge}</td>
+            <td class="py-3 px-4">
+              <span class="inline-block px-2.5 py-0.5 rounded-full text-xs font-extrabold ${score >= 5 ? 'bg-emerald-100 text-emerald-800' : 'bg-warmamber-100 text-warmamber-700'}">
+                ${score} / 8
+              </span>
+            </td>
+            <td class="py-3 px-4 text-xs text-stone-700">${vals}</td>
+            <td class="py-3 px-4 text-xs text-stone-700">${ms}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // ==================== PROGRESS BAR ====================
+    function updateProgressBar() {
+      // 6 milestones:
+      // 1: Framework quiz answered
+      // 2: 3 programs selected
+      // 3–5: Each of the 3 selected programs has >= 1 criterion checked + goals + evidence filled
+      // 6: Both Part 3 checkpoint questions answered
+      let done = 0;
+      const total = 6;
+
+      if (state.fwQuiz.q1 === 'coop' && state.fwQuiz.q2 === 'bmp') done++;
+      if (state.selectedIds.length === 3) done++;
+
+      state.selectedIds.forEach((progId) => {
+        const note = state.notes[progId];
+        const score = countCriteriaScore(progId);
+        if (note && score > 0 && note.goals.trim() && note.evidence.trim()) {
+          done++;
+        }
+      });
+
+      if (state.reflections.q1.trim() && state.reflections.q2.trim()) done++;
+
+      const pct = Math.min(100, Math.round((done / total) * 100));
+      document.getElementById('progress-text').textContent = `${pct}%`;
+      document.getElementById('progress-bar').style.width = `${pct}%`;
+    }
+
+    // ==================== SAVE / PRINT REPORT MODAL ====================
+    function openReportModal() {
+      const nameInput = document.getElementById('rep-student-input');
+      nameInput.value = state.studentName || '';
+      document.getElementById('rep-student-print-name').textContent = state.studentName.trim() || '______________________';
+      document.getElementById('rep-date').textContent = new Date().toLocaleDateString();
+
+      const progContainer = document.getElementById('rep-programs-list');
+      if (state.selectedIds.length === 0) {
+        progContainer.innerHTML = '<p class="italic text-stone-500">No programs selected yet.</p>';
+      } else {
+        progContainer.innerHTML = state.selectedIds.map((progId, idx) => {
+          const p = PROGRAMS.find((item) => item.id === progId);
+          const note = state.notes[progId] || {};
+          const score = countCriteriaScore(progId);
+          const checkedLabels = CRITERIA_LIST.filter((c) => note.criteria && note.criteria[c.id]).map((c) => c.label);
+          const vals = Array.isArray(note.values) && note.values.length > 0 ? note.values.join(', ') : 'None selected';
+
+          return `
+            <div class="rounded-xl border border-stone-200 p-3.5 space-y-1.5 break-words">
+              <div class="font-extrabold text-forest-900">
+                ${idx + 1}. ${p.name} (${p.levelBadge}) &mdash; Criteria Score: ${score} / 8
+              </div>
+              <div><strong>Criteria Met:</strong> ${checkedLabels.length > 0 ? checkedLabels.join('; ') : 'None checked'}</div>
+              <div><strong>Biodiversity Values Addressed:</strong> ${vals}</div>
+              <div><strong>Primary Goals:</strong> ${note.goals && note.goals.trim() ? note.goals.trim() : 'No notes entered.'}</div>
+              <div><strong>Funding &amp; Multi-Species Protection:</strong> ${note.multiSpecies && note.multiSpecies.trim() ? note.multiSpecies.trim() : 'No notes entered.'}</div>
+              <div><strong>Evidence of Success &amp; Limitations:</strong> ${note.evidence && note.evidence.trim() ? note.evidence.trim() : 'No notes entered.'}</div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      document.getElementById('rep-q1').textContent = state.reflections.q1.trim() || 'No response entered.';
+      document.getElementById('rep-q2').textContent = state.reflections.q2.trim() || 'No response entered.';
+
+      document.getElementById('copy-toast').classList.add('hidden');
+      document.getElementById('report-modal').classList.remove('hidden');
+    }
+
+    function closeReportModal() {
+      document.getElementById('report-modal').classList.add('hidden');
+    }
+
+    function copyReportToClipboard() {
+      const lines = [
+        'WILDLIFE CONSERVATION PROGRAM INVESTIGATION REPORT',
+        `Student: ${state.studentName.trim() || 'Not entered'} | Date: ${new Date().toLocaleDateString()}`,
+        '====================================================',
+        '',
+        'PART 2: INVESTIGATED CONSERVATION PROGRAMS'
+      ];
+
+      if (state.selectedIds.length === 0) {
+        lines.push('No programs selected yet.');
+      } else {
+        state.selectedIds.forEach((progId, idx) => {
+          const p = PROGRAMS.find((item) => item.id === progId);
+          const note = state.notes[progId] || {};
+          const score = countCriteriaScore(progId);
+          const checkedLabels = CRITERIA_LIST.filter((c) => note.criteria && note.criteria[c.id]).map((c) => c.label);
+          const vals = Array.isArray(note.values) && note.values.length > 0 ? note.values.join(', ') : 'None selected';
+
+          lines.push(
+            '',
+            `${idx + 1}. ${p.name} (${p.levelBadge}) — Criteria Score: ${score} / 8`,
+            `   Criteria Met: ${checkedLabels.length > 0 ? checkedLabels.join('; ') : 'None checked'}`,
+            `   Biodiversity Values: ${vals}`,
+            `   Primary Goals: ${note.goals && note.goals.trim() ? note.goals.trim() : 'No notes entered.'}`,
+            `   Funding & Multi-Species: ${note.multiSpecies && note.multiSpecies.trim() ? note.multiSpecies.trim() : 'No notes entered.'}`,
+            `   Evidence of Success: ${note.evidence && note.evidence.trim() ? note.evidence.trim() : 'No notes entered.'}`
+          );
+        });
+      }
+
+      lines.push(
+        '',
+        'PART 3: SYNTHESIS CHECKPOINT',
+        `1. Highest-scoring program & key criteria:\n${state.reflections.q1.trim() || 'No response entered.'}`,
+        '',
+        `2. Comparing different conservation levels:\n${state.reflections.q2.trim() || 'No response entered.'}`
+      );
+
+      const temp = document.createElement('textarea');
+      temp.value = lines.join('\n');
+      temp.style.position = 'fixed';
+      temp.style.left = '-9999px';
+      document.body.appendChild(temp);
+      temp.select();
+      try {
+        document.execCommand('copy');
+        document.getElementById('copy-toast').classList.remove('hidden');
+      } catch (e) {
+        // Ignore clipboard errors
+      }
+      document.body.removeChild(temp);
+    }
+
+    // ==================== LOCAL STORAGE PERSISTENCE ====================
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {
+        // Ignore storage errors
+      }
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === 'object') {
+          state = {
+            ...state,
+            ...parsed,
+            fwQuiz: { ...state.fwQuiz, ...(parsed.fwQuiz || {}) },
+            selectedIds: Array.isArray(parsed.selectedIds) ? parsed.selectedIds.slice(0, 3) : [],
+            notes: parsed.notes || {},
+            reflections: { ...state.reflections, ...(parsed.reflections || {}) }
+          };
+        }
+      } catch (e) {
+        // Ignore parse errors
+      }
+    }
+
+    // ==================== RESET ALL PROGRESS ====================
+    function showResetConfirm() {
+      document.getElementById('reset-trigger-btn').classList.add('hidden');
+      document.getElementById('reset-confirm-bar').classList.remove('hidden');
+    }
+
+    function cancelReset() {
+      document.getElementById('reset-confirm-bar').classList.add('hidden');
+      document.getElementById('reset-trigger-btn').classList.remove('hidden');
+    }
+
+    function confirmResetAll() {
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+      } catch (e) {
+        // Ignore storage errors
+      }
+
+      state = {
+        studentName: '',
+        fwQuiz: { q1: '', q2: '' },
+        selectedIds: [],
+        notes: {},
+        reflections: { q1: '', q2: '' }
+      };
+
+      document.getElementById('fw-q1-fb').classList.add('hidden');
+      document.getElementById('fw-q2-fb').classList.add('hidden');
+      document.getElementById('selection-notice').classList.add('hidden');
+
+      applySavedValuesToDOM();
+      renderSelectorGrid();
+      renderDossiers();
+      renderSummaryMatrix();
+      updateProgressBar();
+      cancelReset();
+    }
+  </script>
+</body>
+</html>
